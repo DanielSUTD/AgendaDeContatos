@@ -1,59 +1,89 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
-<?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="464.0" prefWidth="648.0" styleClass="anchor-pane" stylesheets="@../../style/Style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ContactPageController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="599.0" prefWidth="963.0" styleClass="anchor-pane" stylesheets="@../../style/Style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ContactPageController">
    <children>
-      <TableView fx:id="contactPage_Table" layoutX="6.0" layoutY="158.0" prefHeight="226.0" prefWidth="637.0" stylesheets="@../design/Style.css">
+      <TableView fx:id="contactPage_Table" layoutX="477.0" layoutY="29.0" prefHeight="504.0" prefWidth="486.0" stylesheets="@../design/Style.css">
         <columns>
-          <TableColumn fx:id="contactPage_ID" prefWidth="64.0" text="ID" />
-          <TableColumn fx:id="contactPage_Name" prefWidth="99.0" text="NOME" />
-            <TableColumn fx:id="contactPage_phone" prefWidth="151.0" text="TELEFONE" />
-            <TableColumn fx:id="contactPage_Email" prefWidth="179.0" text="EMAIL" />
-            <TableColumn fx:id="contactPage_EditDelete" prefWidth="143.0" text="Editar/Apagar" />
+          <TableColumn fx:id="contactPage_IDColumn" prefWidth="43.0" text="ID" />
+          <TableColumn fx:id="contactPage_NameColumn" prefWidth="128.0" text="NOME" />
+            <TableColumn fx:id="contactPage_PhoneColumn" minWidth="0.0" prefWidth="150.0" text="TELEFONE" />
+            <TableColumn fx:id="contactPage_EmailColumn" prefWidth="164.0" text="E-mail" />
         </columns>
       </TableView>
-      <Text layoutX="20.0" layoutY="43.0" strokeType="OUTSIDE" strokeWidth="0.0" text="MyContacts" wrappingWidth="402.099609375">
-         <font>
-            <Font name="Constantia" size="50.0" />
-         </font>
-      </Text>
-      <Pane layoutY="59.0" prefHeight="6.0" prefWidth="648.0" style="-fx-background-color: black;" />
-      <ImageView fitHeight="50.0" fitWidth="54.0" layoutX="-7.0" layoutY="6.0">
-         <image>
-            <Image url="@../resources/phone-book.png" />
-         </image>
-      </ImageView>
-      <HBox layoutX="6.0" layoutY="88.0" prefHeight="70.0" prefWidth="174.0">
+      <AnchorPane layoutX="-9.0" prefHeight="599.0" prefWidth="125.0" style="-fx-background-color: white;">
          <children>
-            <ImageView fitHeight="50.0" fitWidth="48.0" onMouseClicked="#getAddTable">
+            <ImageView fitHeight="69.0" fitWidth="74.0" layoutX="26.0" layoutY="504.0" onMouseClicked="#user">
                <image>
-                  <Image url="@../resources/add-friend.png" />
+                  <Image url="@../../img/user.png" />
                </image>
             </ImageView>
-            <ImageView fitHeight="52.0" fitWidth="43.0" onMouseClicked="#refreshTable">
+            <Label layoutX="12.0" layoutY="76.0" text="MyContacts">
+               <font>
+                  <Font name="Constantia Bold" size="20.0" />
+               </font>
+            </Label>
+            <ImageView fitHeight="50.0" fitWidth="56.0" layoutX="41.0" layoutY="26.0">
                <image>
-                  <Image url="@../resources/reload.png" />
+                  <Image url="@../../img/phone-book.png" />
                </image>
             </ImageView>
          </children>
-      </HBox>
-      <ImageView fitHeight="50.0" fitWidth="48.0" layoutX="6.0" layoutY="408.0" onMouseClicked="#loadUser">
+      </AnchorPane>
+      <Button fx:id="contactPage_Update" layoutX="362.0" layoutY="304.0" mnemonicParsing="false" onAction="#updateContact" prefHeight="36.0" prefWidth="93.0" text="Atualizar" textFill="#070707">
+         <font>
+            <Font name="Constantia Bold" size="15.0" />
+         </font>
+      </Button>
+      <Button fx:id="contactPage_Delete" layoutX="133.0" layoutY="304.0" mnemonicParsing="false" onAction="#deleteContact" prefHeight="36.0" prefWidth="86.0" text="Deletar">
+         <font>
+            <Font name="Constantia Bold" size="15.0" />
+         </font>
+      </Button>
+      <Label layoutX="123.0" layoutY="102.0" text="Nome" textFill="WHITE">
+         <font>
+            <Font name="Constantia Bold" size="13.0" />
+         </font>
+      </Label>
+      <TextField fx:id="contactPage_Name" layoutX="186.0" layoutY="96.0" prefHeight="27.0" prefWidth="252.0" promptText="Exemplo: John Marston" />
+      <Label layoutX="121.0" layoutY="153.0" text="Telefone" textFill="WHITE">
+         <font>
+            <Font name="Constantia Bold" size="13.0" />
+         </font>
+      </Label>
+      <TextField fx:id="contactPage_Phone" layoutX="186.0" layoutY="147.0" prefHeight="24.0" prefWidth="252.0" promptText="Exemplo: 61 992789076" />
+      <Pane layoutX="116.0" layoutY="131.0" prefHeight="8.0" prefWidth="361.0" style="-fx-background-color: black;" />
+      <Pane layoutX="116.0" layoutY="190.0" prefHeight="8.0" prefWidth="361.0" style="-fx-background-color: black;" />
+      <Label layoutX="121.0" layoutY="213.0" text="E-mail" textFill="WHITE">
+         <font>
+            <Font name="Constantia Bold" size="13.0" />
+         </font>
+      </Label>
+      <TextField fx:id="contactPage_Email" layoutX="186.0" layoutY="207.0" prefHeight="27.0" prefWidth="252.0" promptText="Exemplo: DanielDamazio123@hotmail.com" />
+      <Pane layoutX="116.0" layoutY="249.0" prefHeight="8.0" prefWidth="361.0" style="-fx-background-color: black;" />
+      <Button fx:id="contactPage_SaveButton" layoutX="237.0" layoutY="304.0" mnemonicParsing="false" onAction="#addContact" prefHeight="36.0" prefWidth="101.0" text="Salvar">
+         <font>
+            <Font name="Constantia Bold" size="15.0" />
+         </font>
+      </Button>
+      <ImageView fitHeight="15.0" fitWidth="22.0" layoutX="938.0" onMouseClicked="#close">
          <image>
-            <Image url="@../resources/user.png" />
+            <Image url="@../../img/close.png" />
          </image>
       </ImageView>
-      <ImageView fitHeight="19.0" fitWidth="26.0" layoutX="620.0" layoutY="2.0" onMouseClicked="#close">
+      <ImageView layoutX="280.0" layoutY="15.0">
          <image>
-            <Image url="@../resources/close.png" />
+            <Image url="@../../img/add-friend.png" />
          </image>
       </ImageView>
    </children>
