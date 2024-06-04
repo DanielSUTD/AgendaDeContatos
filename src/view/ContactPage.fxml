@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="464.0" prefWidth="648.0" styleClass="anchor-pane" stylesheets="@../../style/Style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ContactPageController">
+   <children>
+      <TableView fx:id="contactPage_Table" layoutX="6.0" layoutY="158.0" prefHeight="226.0" prefWidth="637.0" stylesheets="@../design/Style.css">
+        <columns>
+          <TableColumn fx:id="contactPage_ID" prefWidth="64.0" text="ID" />
+          <TableColumn fx:id="contactPage_Name" prefWidth="99.0" text="NOME" />
+            <TableColumn fx:id="contactPage_phone" prefWidth="151.0" text="TELEFONE" />
+            <TableColumn fx:id="contactPage_Email" prefWidth="179.0" text="EMAIL" />
+            <TableColumn fx:id="contactPage_EditDelete" prefWidth="143.0" text="Editar/Apagar" />
+        </columns>
+      </TableView>
+      <Text layoutX="20.0" layoutY="43.0" strokeType="OUTSIDE" strokeWidth="0.0" text="MyContacts" wrappingWidth="402.099609375">
+         <font>
+            <Font name="Constantia" size="50.0" />
+         </font>
+      </Text>
+      <Pane layoutY="59.0" prefHeight="6.0" prefWidth="648.0" style="-fx-background-color: black;" />
+      <ImageView fitHeight="50.0" fitWidth="54.0" layoutX="-7.0" layoutY="6.0">
+         <image>
+            <Image url="@../resources/phone-book.png" />
+         </image>
+      </ImageView>
+      <HBox layoutX="6.0" layoutY="88.0" prefHeight="70.0" prefWidth="174.0">
+         <children>
+            <ImageView fitHeight="50.0" fitWidth="48.0" onMouseClicked="#getAddTable">
+               <image>
+                  <Image url="@../resources/add-friend.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="52.0" fitWidth="43.0" onMouseClicked="#refreshTable">
+               <image>
+                  <Image url="@../resources/reload.png" />
+               </image>
+            </ImageView>
+         </children>
+      </HBox>
+      <ImageView fitHeight="50.0" fitWidth="48.0" layoutX="6.0" layoutY="408.0" onMouseClicked="#loadUser">
+         <image>
+            <Image url="@../resources/user.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="19.0" fitWidth="26.0" layoutX="620.0" layoutY="2.0" onMouseClicked="#close">
+         <image>
+            <Image url="@../resources/close.png" />
+         </image>
+      </ImageView>
+   </children>
+</AnchorPane>

@@ -1,0 +1,23 @@
+.anchor-pane{
+    -fx-background-color:  rgb(100, 100, 100);
+}
+
+.button{
+    -fx-background-color: linear-gradient(to bottom right, #ffffff, #000000);
+    -fx-cursor: hand;
+    -fx-text-fill: #fff;
+}
+
+.button:hover{
+    -fx-background-color: linear-gradient(to bottom right, #ffffff, #000000);
+}
+
+.text-field{
+    -fx-border-color: #000;
+    -fx-border-width: .5px;
+}
+
+.text-field:focused{
+    -fx-border-color: linear-gradient(to bottom right, #ffffff, #000000);
+    -fx-border-width: .8px;
+}

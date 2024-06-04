@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="455.0" prefWidth="623.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.LoginScreenController">
+   <children>
+      <AnchorPane layoutY="-1.0" prefHeight="456.0" prefWidth="623.0" styleClass="anchor-pane" stylesheets="@../../style/Style.css">
+         <children>
+            <TextField fx:id="login_Email" layoutX="251.0" layoutY="152.0" prefHeight="25.0" prefWidth="262.0" promptText="Exemplo: DanielDamazio123@hotmail.com" />
+            <Button fx:id="login_EnterButton" layoutX="251.0" layoutY="281.0" mnemonicParsing="false" onAction="#login" prefHeight="25.0" prefWidth="262.0" text="Entrar">
+               <font>
+                  <Font name="Constantia Bold" size="15.0" />
+               </font>
+            </Button>
+            <Button fx:id="login_RegisterButton" layoutX="251.0" layoutY="411.0" mnemonicParsing="false" onAction="#signUpScreen" prefHeight="25.0" prefWidth="262.0" text="Cadastrar-se">
+               <font>
+                  <Font name="Constantia Bold" size="15.0" />
+               </font>
+            </Button>
+            <Hyperlink fx:id="login_ForgotPassword" layoutX="399.0" layoutY="228.0" onAction="#forgotPassword" prefHeight="27.0" prefWidth="114.0" text="Esqueceu Senha?">
+               <font>
+                  <Font name="Constantia Bold" size="12.0" />
+               </font></Hyperlink>
+            <PasswordField fx:id="login_Password" layoutX="251.0" layoutY="200.0" prefHeight="27.0" prefWidth="262.0" promptText="Exemplo: Daniel123" />
+            <AnchorPane layoutY="-1.0" prefHeight="456.0" prefWidth="171.0" style="-fx-background-color: white;">
+               <children>
+                  <Label layoutX="29.0" layoutY="216.0" prefHeight="24.0" prefWidth="114.0" text="MyContacts">
+                     <font>
+                        <Font name="Constantia" size="20.0" />
+                     </font>
+                  </Label>
+                  <ImageView layoutX="54.0" layoutY="152.0">
+                     <image>
+                        <Image url="@../../img/phone-book.png" />
+                     </image>
+                  </ImageView>
+               </children>
+            </AnchorPane>
+            <ImageView layoutX="350.0" layoutY="58.0">
+               <image>
+                  <Image url="@../../img/user.png" />
+               </image>
+            </ImageView>
+            <ImageView layoutX="350.0" layoutY="341.0">
+               <image>
+                  <Image url="@../../img/contact-list.png" />
+               </image>
+            </ImageView>
+            <Label layoutX="251.0" layoutY="133.0" text="E-mail" textFill="WHITE">
+               <font>
+                  <Font name="Constantia" size="15.0" />
+               </font>
+            </Label>
+            <Label layoutX="251.0" layoutY="181.0" text="Senha" textFill="WHITE">
+               <font>
+                  <Font name="Constantia" size="15.0" />
+               </font>
+            </Label>
+         </children>
+      </AnchorPane>
+   </children>
+</AnchorPane>
