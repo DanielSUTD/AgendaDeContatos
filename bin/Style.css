@@ -21,3 +21,7 @@
     -fx-border-color: linear-gradient(to bottom right, #ffffff, #000000);
     -fx-border-width: .8px;
 }
+
+.close{
+    -fx-cursor: hand;
+}

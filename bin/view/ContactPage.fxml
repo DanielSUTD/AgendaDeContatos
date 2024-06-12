@@ -76,7 +76,7 @@
             <Font name="Constantia Bold" size="15.0" />
          </font>
       </Button>
-      <ImageView fitHeight="15.0" fitWidth="22.0" layoutX="938.0" onMouseClicked="#close">
+      <ImageView fitHeight="15.0" fitWidth="22.0" layoutX="938.0" onMouseClicked="#close" styleClass="close">
          <image>
             <Image url="@../../img/close.png" />
          </image>
