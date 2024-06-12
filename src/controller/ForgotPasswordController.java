@@ -2,11 +2,9 @@ package controller;
 
 import java.io.IOException;
 import java.net.URL;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
-import dao.ConnectDB;
+import dao.UserDAO;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -20,6 +18,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import model.User;
 import javafx.scene.Node;
 import util.AlertMessage;
 import org.mindrot.jbcrypt.BCrypt;
@@ -43,93 +42,70 @@ public class ForgotPasswordController implements Initializable {
 
     @FXML
     private ComboBox<String> forgotPsw_Question;
-    
-    //Objetos SQL
-    private Connection con;
-    private PreparedStatement preparedStatement;
-    private ResultSet resultSet;
-    
-    ObservableList<String> questionBoxList = FXCollections.observableArrayList(
+
+    @FXML
+    private ObservableList<String> questionBoxList = FXCollections.observableArrayList(
             "Qual sua comida favorita?",
             "Qual seu jogo favorito?",
             "Qual seu herói favorito?"
     );
 
     public void searchPassword() {
-        ConnectDB connect = new ConnectDB();
+        UserDAO userDao = new UserDAO();
         AlertMessage alert = new AlertMessage();
-        
+
         try {
-        	
-        	con = connect.getconnection();
-        	
-        	String email = forgotPsw_Email.getText().trim();
-        	String password = forgotPsw_Password.getText().trim();
-        	String selectedQuestion = forgotPsw_Question.getValue() != null ? forgotPsw_Question.getValue().trim() : "";
-        	String answer = forgotPsw_Answer.getText().trim();
-        	
-        	if(email.isEmpty()) {
-        		alert.errorMessage("Digite o email!");
-        	} else if (selectedQuestion.isEmpty()) {
-        		alert.errorMessage("Selecione uma pergunta de segurança!");
-        	} else {
-        	    String query = "SELECT EMAIL, ALTERNATIVA, RESPOSTA, SENHA FROM usuario WHERE EMAIL=?";
-        		preparedStatement = con.prepareStatement(query);
-                preparedStatement.setString(1, email);
+            String email = forgotPsw_Email.getText().trim();
+            String password = forgotPsw_Password.getText().trim();
+            String selectedQuestion = forgotPsw_Question.getValue() != null ? forgotPsw_Question.getValue().trim() : "";
+            String answer = forgotPsw_Answer.getText().trim();
 
-                resultSet = preparedStatement.executeQuery();
-                
-                //Se encontrar uma linha válida
-                if(resultSet.next()) {
-                	email = resultSet.getString(1);
-                	String dbSelectedQuestion = resultSet.getString(2);
-                	String dbAnswer = resultSet.getString(3);
-                	String dbPassword = resultSet.getString(4);
-                	
-                	resultSet.close();
-                	
-                	//Verifica Resposta
-                	 if(forgotPsw_Answer != null) {
+            if (email.isEmpty()) {
+                alert.errorMessage("Digite o email!");
+                return;
+            } else if (selectedQuestion.isEmpty()) {
+                alert.errorMessage("Selecione uma pergunta de segurança!");
+                return;
+            }
 
-                		 
-                		 //Verifica se a resposta é igual a resposta que o usuário digitou
-                		 if(dbAnswer.equals(answer)) {
-                			 //Criptografando nova senha
-                			 String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
-                			 
-                			 String query_2 = "UPDATE usuario SET SENHA=? WHERE EMAIL=?";
-                             preparedStatement = con.prepareStatement(query_2);
-                             preparedStatement.setString(1, hashedPassword);
-                             preparedStatement.setString(2, email);
-                             preparedStatement.executeUpdate();
-                             alert.successMessage("Senha atualizada!");
-                             preparedStatement.close();
-                		 } else {
-                			 alert.errorMessage("Resposta errada!");
-                		 }
-                		 
-                	 } else {
-                		 alert.errorMessage("Resposta errada!");
-                	 }
-                	
+            User user = userDao.getUserByEmail(email);
+
+            if (user != null) {
+                String dbSelectedQuestion = user.getQuestion();
+                String dbAnswer = user.getAnswer();
+
+                // Verifica Resposta
+                if (dbAnswer != null && dbAnswer.equals(answer)) {
+                    // Criptografando nova senha
+                    String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
+
+                    // Atualizando a senha
+                    userDao.updatePassword(email, hashedPassword);
+                    alert.successMessage("Senha atualizada!");
                 } else {
-                	 alert.errorMessage("Registro não encontrado!");
+                    alert.errorMessage("Resposta errada!");
                 }
-        	}
-        	
-        	clearFields();
-        	
-        } catch(Exception e) {
-        	e.printStackTrace();
+            } else {
+                alert.errorMessage("Usuário não encontrado!");
+            }
+
+            clearFields();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            alert.errorMessage("Erro ao acessar o banco de dados: " + e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+            alert.errorMessage("Ocorreu um erro ao tentar atualizar a senha." + e.getMessage());
         }
-        
     }
-    
+
+
     public void clearFields() {
-    	forgotPsw_Email.setText("");
-    	forgotPsw_Question.getSelectionModel().clearSelection();
-    	forgotPsw_Answer.setText("");
-    	forgotPsw_Password.setText("");
+        forgotPsw_Email.setText("");
+        forgotPsw_Question.getSelectionModel().clearSelection();
+        forgotPsw_Answer.setText("");
+        forgotPsw_Password.setText("");
     }
 
     public void home(ActionEvent event) throws IOException {
@@ -145,4 +121,4 @@ public class ForgotPasswordController implements Initializable {
         forgotPsw_Question.setValue("Selecione uma pergunta");
         forgotPsw_Question.setItems(questionBoxList);
     }
-}          
+}

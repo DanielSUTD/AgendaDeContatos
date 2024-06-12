@@ -11,9 +11,9 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="599.0" prefWidth="963.0" styleClass="anchor-pane" stylesheets="@../../style/Style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ContactPageController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="540.0" prefWidth="963.0" styleClass="anchor-pane" stylesheets="@../../style/Style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ContactPageController">
    <children>
-      <TableView fx:id="contactPage_Table" layoutX="477.0" layoutY="29.0" prefHeight="504.0" prefWidth="486.0" stylesheets="@../design/Style.css">
+      <TableView fx:id="contactPage_Table" layoutX="477.0" layoutY="29.0" prefHeight="511.0" prefWidth="486.0" stylesheets="@../../style/Style.css">
         <columns>
           <TableColumn fx:id="contactPage_IDColumn" prefWidth="43.0" text="ID" />
           <TableColumn fx:id="contactPage_NameColumn" prefWidth="128.0" text="NOME" />
@@ -21,9 +21,9 @@
             <TableColumn fx:id="contactPage_EmailColumn" prefWidth="164.0" text="E-mail" />
         </columns>
       </TableView>
-      <AnchorPane layoutX="-9.0" prefHeight="599.0" prefWidth="125.0" style="-fx-background-color: white;">
+      <AnchorPane layoutX="-9.0" prefHeight="540.0" prefWidth="125.0" style="-fx-background-color: white;">
          <children>
-            <ImageView fitHeight="69.0" fitWidth="74.0" layoutX="26.0" layoutY="504.0" onMouseClicked="#user">
+            <ImageView fitHeight="69.0" fitWidth="74.0" layoutX="26.0" layoutY="457.0" onMouseClicked="#user">
                <image>
                   <Image url="@../../img/user.png" />
                </image>

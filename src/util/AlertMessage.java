@@ -10,7 +10,7 @@ public class AlertMessage {
 	    public void errorMessage(String message){
 	        
 	        alert = new Alert(AlertType.ERROR);
-	        alert.setTitle("Mensagem de erro");
+	        alert.setTitle("ERRO");
 	        alert.setHeaderText(null);
 	        alert.setContentText(message);
 	        alert.showAndWait();
@@ -20,7 +20,7 @@ public class AlertMessage {
 	    public void successMessage(String message){
 	        
 	        alert = new Alert(AlertType.INFORMATION);
-	        alert.setTitle("Mensagem informativa");
+	        alert.setTitle("INFORMAÇÃO");
 	        alert.setHeaderText(null);
 	        alert.setContentText(message);
 	        alert.showAndWait();

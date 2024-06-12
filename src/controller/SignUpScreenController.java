@@ -1,13 +1,10 @@
 package controller;
 
-
 import java.io.IOException;
 import java.net.URL;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
-import dao.ConnectDB;
+import dao.UserDAO;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -23,9 +20,11 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import util.AlertMessage;
+import model.User;
 import org.mindrot.jbcrypt.BCrypt;
 
-public class SignUpScreenController implements Initializable{
+
+public class SignUpScreenController implements Initializable {
 
     @FXML
     private TextField signUp_Answer;
@@ -50,99 +49,94 @@ public class SignUpScreenController implements Initializable{
 
     @FXML
     private ComboBox<String> signUp_SelectQuestion;
-    
-    
-    ObservableList<String> questionBoxList = FXCollections.observableArrayList("Qual sua comida favorita?","Qual seu jogo favorito?","Qual seu herói favorito?");
-    
-    //Objetos SQL
-    private Connection connectionSQL;
-    private PreparedStatement preparedStatement;
-    private ResultSet resultSet;
-    
+
+    @FXML
+    private ObservableList<String> questionBoxList = FXCollections.observableArrayList("Qual sua comida favorita?", "Qual seu jogo favorito?", "Qual seu herói favorito?");
+
     public void signUp(ActionEvent event) throws IOException {
+    	//Instanciando a mensagem de alerta
         AlertMessage alert = new AlertMessage();
-        ConnectDB connect = new ConnectDB();
+        //Instanciando o Data Acess Object do Usuário
+        UserDAO userDao = new UserDAO();
 
         try {
-            Connection con = connect.getconnection();
-
+        	//Colocando as palavras nas caixas de texto no objeto String
             String name = signUp_Name.getText().trim();
             String email = signUp_Email.getText().trim();
             String password = signUp_Password.getText().trim();
             String confirmPassword = signUp_ConfirmPassword.getText().trim();
-            String question = signUp_SelectQuestion.getValue().toString();
+            String question = signUp_SelectQuestion.getValue();
             String answer = signUp_Answer.getText().trim();
 
+            //Verificando se existe alguma caixa de texto vazia
             if (name.isEmpty() || email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty() || question.isEmpty() || answer.isEmpty()) {
                 alert.errorMessage("Preencha todos os campos!");
-            }else {
-                if (password.length() < 8) {
-                    alert.errorMessage("A senha deve ter pelo menos 8 caracteres!");
-                } else if (!password.equals(confirmPassword)) {
-                    alert.errorMessage("Coloque senhas iguais nos campos!");
-                } else {
-                	//Criptografando a senha
-                	String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
-                	
-                    // Verificação do email
-                    String query = "SELECT * FROM usuario WHERE EMAIL = ?";
-                    PreparedStatement preparedStatement = con.prepareStatement(query);
-                    preparedStatement.setString(1, email);
+                return;
+            }
 
-                    ResultSet resultSet = preparedStatement.executeQuery();
-
-                    if (resultSet.next()) {
-                        alert.errorMessage("O email já está em uso!");
-                    } else {
-                        String query_2 = "INSERT INTO usuario (NOME, EMAIL, SENHA, ALTERNATIVA, RESPOSTA) VALUES(?,?,?,?,?)";
-                        preparedStatement = con.prepareStatement(query_2);
-
-                        preparedStatement.setString(1, name);
-                        preparedStatement.setString(2, email);
-                        preparedStatement.setString(3, hashedPassword);
-                        preparedStatement.setString(4, question);
-                        preparedStatement.setString(5, answer);
-
-                        preparedStatement.execute();
-
-                        alert.successMessage("Conta cadastrada!");
-                    }
-                }
+            //Verificando se existe a senha é menor que 8 caracteres
+            if (password.length() < 8) {
+                alert.errorMessage("A senha deve ter pelo menos 8 caracteres!");
+                return;
             }
             
-           
-        }catch (Exception e) {
+            //Verificando se as senhas são iguais
+            if (!password.equals(confirmPassword)) {
+                alert.errorMessage("Coloque senhas iguais nos campos!");
+                return;
+            }
+
+            // Criptografando a senha
+            String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
+
+            
+            User user = userDao.getUserByEmail(email);
+            
+            //Verificando se o Email já está em uso
+            if (user != null) {
+                alert.errorMessage("O email já está em uso!");
+                return;
+            }
+
+            //Instanciando novo usuário na memória
+            User newUser = new User(name, email, hashedPassword, question, answer);
+            //Inserindo novo usuário no banco de dados
+            userDao.insertUser(newUser);
+            
+            alert.successMessage("Conta cadastrada!");
+            //Limpando caixas de texto
+            clearFields();
+
+        } catch (SQLException e) {
             e.printStackTrace();
+            alert.errorMessage("Erro ao cadastrar conta: " + e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+            alert.errorMessage("Ocorreu um erro ao tentar cadastrar: " + e.getMessage());
         }
-        
-        clearFields();
-    }
-    
-    public void clearFields() {
-    	signUp_Name.setText("");
-    	signUp_Email.setText("");
-    	signUp_Password.setText("");
-    	signUp_ConfirmPassword.setText("");
-    	signUp_SelectQuestion.getSelectionModel().clearSelection();
-    	signUp_Answer.setText("");
-    	
     }
 
-    
+
+    public void clearFields() {
+        signUp_Name.setText("");
+        signUp_Email.setText("");
+        signUp_Password.setText("");
+        signUp_ConfirmPassword.setText("");
+        signUp_SelectQuestion.getSelectionModel().clearSelection();
+        signUp_Answer.setText("");
+    }
+
     public void loginScreen(ActionEvent event) throws IOException {
-        Parent view= FXMLLoader.load(getClass().getResource("/view/LoginScreen.fxml"));
-        Scene scene= new Scene(view);
-        Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
+        Parent view = FXMLLoader.load(getClass().getResource("/view/LoginScreen.fxml"));
+        Scene scene = new Scene(view);
+        Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
         window.setScene(scene);
         window.show();
-      
-     }
-
-	@Override
-	public void initialize(URL url, ResourceBundle rb) {
-		  signUp_SelectQuestion.setValue("Selecione uma pergunta");
-		  signUp_SelectQuestion.setItems(questionBoxList);
-		
-	}
-
+    }
+    
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
+        signUp_SelectQuestion.setValue("Selecione uma pergunta");
+        signUp_SelectQuestion.setItems(questionBoxList);
+    }
 }

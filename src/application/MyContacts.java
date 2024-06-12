@@ -14,7 +14,7 @@ import javafx.stage.StageStyle;
 public class MyContacts extends Application {
 	
    
-   private Stage primaryStage;
+    private Stage primaryStage;
    
 
     @Override
@@ -38,7 +38,7 @@ public class MyContacts extends Application {
             LoginScreenController mainWindowController = loader.getController();
             mainWindowController.setMain(this);
 
-            
+            //Nova cena
             Scene scene = new Scene(pane);
             primaryStage.setScene(scene);
             primaryStage.initStyle(StageStyle.UNDECORATED);

@@ -4,29 +4,27 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-
 public class ConnectDB {
 
-	 private static final String url = "jdbc:mysql://localhost:3306/mydb";
-	 private static final String user = "root";
-	 private static final String password = "soutodrex123";
-	 private static Connection con;
-	 
-	 public Connection getconnection() {
-		 try {
-			if(con == null) {
-				con = DriverManager.getConnection(url, user, password);
-				return con;
-			}else {
-				return con;
-			}
-			 
-		 }catch(SQLException e) {
-			 e.printStackTrace();
-			 return null;
-		 }
-		 
-		 
-	 }
-	 
+    private static final String URL = "jdbc:mysql://localhost:3306/mydb?useSSL=false&autoReconnect=true&useUnicode=yes&characterEncoding=UTF-8";
+    private static final String USER = "root";
+    private static final String PASSWORD = "soutodrex123";
+    private static Connection con = null;
+
+    public Connection getConnection() {
+        try {
+            if (con == null || con.isClosed()) {
+                // Carregar explicitamente o driver JDBC
+                Class.forName("com.mysql.cj.jdbc.Driver");
+                con = DriverManager.getConnection(URL, USER, PASSWORD);
+            }
+            return con;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Erro ao conectar ao banco de dados: " + e.getMessage(), e);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Driver JDBC não encontrado: " + e.getMessage(), e);
+        }
+    }
 }
