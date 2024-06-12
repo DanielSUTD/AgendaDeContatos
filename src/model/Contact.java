@@ -77,4 +77,8 @@ public class Contact {
 		this.email = email;
 	}
 	
+	public String toString() {
+		return " |ID: " +id+ " |Nome: " +name+ " |Telefone: " +phone+ " |E-mail: " +email;
+	}
+	
 }
