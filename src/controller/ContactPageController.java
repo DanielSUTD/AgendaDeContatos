@@ -7,6 +7,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
+import model.Contact;
 
 public class ContactPageController {
 
@@ -17,28 +18,28 @@ public class ContactPageController {
     private TextField contactPage_Email;
 
     @FXML
-    private TableColumn<?, ?> contactPage_EmailColumn;
+    private TableColumn<Contact, String> contactPage_EmailColumn;
 
     @FXML
-    private TableColumn<?, ?> contactPage_IDColumn;
+    private TableColumn<Contact, Integer> contactPage_IDColumn;
 
     @FXML
     private TextField contactPage_Name;
 
     @FXML
-    private TableColumn<?, ?> contactPage_NameColumn;
+    private TableColumn<Contact, String> contactPage_NameColumn;
 
     @FXML
     private TextField contactPage_Phone;
 
     @FXML
-    private TableColumn<?, ?> contactPage_PhoneColumn;
+    private TableColumn<Contact, String> contactPage_PhoneColumn;
 
     @FXML
     private Button contactPage_SaveButton;
 
     @FXML
-    private TableView<?> contactPage_Table;
+    private TableView<Contact> contactPage_Table;
 
     @FXML
     private Button contactPage_Update;
