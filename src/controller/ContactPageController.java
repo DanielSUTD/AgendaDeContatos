@@ -7,6 +7,8 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
+import javafx.stage.Stage;
+import javafx.scene.Node;
 import model.Contact;
 
 public class ContactPageController {
@@ -51,7 +53,8 @@ public class ContactPageController {
 
     @FXML
     void close(MouseEvent event) {
-
+    	 Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+         window.close();
     }
 
     @FXML
