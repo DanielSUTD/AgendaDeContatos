@@ -8,6 +8,7 @@ public class Contact {
 	private String email;
 	private int userID;
 
+	
 	public Contact(int id, String name, String phone, String email, int userID) {
 		this.id = id;
 		this.name = name;
@@ -16,12 +17,15 @@ public class Contact {
 		this.userID = userID;
 	}
 
-	public Contact(int id, String name, String phone, int userID) {
-		this.id = id;
+
+	public Contact(String name, String phone, String email, int userID) {
 		this.name = name;
 		this.phone = phone;
+		this.email = email;
 		this.userID = userID;
 	}
+
+
 
 
 	public int getId() {
