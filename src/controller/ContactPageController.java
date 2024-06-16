@@ -120,7 +120,7 @@ public class ContactPageController{
              return row;
          });
 
-         // Load contacts inside the table method
+         
          ContactDAO contactDAO = new ContactDAO();
          try {
              contacts = contactDAO.getContacts(userID);

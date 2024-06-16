@@ -40,13 +40,12 @@ public class ContactDAO {
             
             while (resultSet.next()) {
                 Contact contact = new Contact();
-                contact.setId(resultSet.getInt("ID_CONTATO")); // Use the correct column name
+                contact.setId(resultSet.getInt("ID_CONTATO")); 
                 contact.setName(resultSet.getString("NOME"));
                 contact.setPhone(resultSet.getString("TELEFONE"));
                 contact.setEmail(resultSet.getString("EMAIL"));
                 contacts.add(contact);
             }
-            System.out.println("Contacts fetched: " + contacts.size()); // Log to verify contacts fetched
         } catch (SQLException e) {
             e.printStackTrace();
             throw new SQLException("Erro ao buscar contatos: " + e.getMessage(), e);
