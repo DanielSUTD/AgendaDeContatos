@@ -7,6 +7,9 @@ public class Contact {
 	private String phone;
 	private String email;
 	private int userID;
+	
+	public Contact() {
+	}
 
 	
 	public Contact(int id, String name, String phone, String email, int userID) {

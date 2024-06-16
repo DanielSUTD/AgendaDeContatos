@@ -59,7 +59,7 @@ public class LoginScreenController {
                 
                 if (user != null && BCrypt.checkpw(password, user.getPassword())) {
                     alert.successMessage("Login bem sucedido!");
-                    contactHomePage(event);
+                    contactHomePage(event, user.getId());
                 } else {
                     alert.errorMessage("Email/Senha incorreta!");
                 }
@@ -81,9 +81,13 @@ public class LoginScreenController {
     }
 
     //TELA DA AGENDA DE CONTATOS
-    public void contactHomePage(ActionEvent event) throws IOException {
+    public void contactHomePage(ActionEvent event, int userID) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/ContactPage.fxml"));
         Parent view = loader.load();
+        
+        // Passando o ID do usuário para o ContactPageController
+        ContactPageController contactPageController = loader.getController();
+        contactPageController.setUserId(userID);
         
         Scene scene = new Scene(view);
         Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
