@@ -144,8 +144,39 @@ public class ContactPageController{
 
     @FXML
     public void updateContact(ActionEvent event) {
+        AlertMessage alert = new AlertMessage();
 
+        try {
+            Contact selectedContact = contactPage_Table.getSelectionModel().getSelectedItem();
+            if (selectedContact == null) {
+                alert.errorMessage("Selecione um contato para atualizar.");
+                return;
+            }
+
+            String name = contactPage_Name.getText().trim();
+            String phone = contactPage_Phone.getText().trim();
+            String email = contactPage_Email.getText().trim();
+
+            if (name.isEmpty() || phone.isEmpty()) {
+                alert.errorMessage("Preencha os campos necessários!");
+                return;
+            }
+
+            selectedContact.setName(name);
+            selectedContact.setPhone(phone);
+            selectedContact.setEmail(email);
+
+            ContactDAO contactDAO = new ContactDAO();
+            contactDAO.updateContact(selectedContact);
+
+            alert.successMessage("Contato atualizado com sucesso!");
+            table();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            alert.errorMessage("Ocorreu um erro ao atualizar o contato.");
+        }
     }
+
 
     @FXML
     public void user(MouseEvent event) {

@@ -53,5 +53,22 @@ public class ContactDAO {
         
         return contacts;
     }
+	
+	 public void updateContact(Contact contact) throws SQLException {
+	        String query = "UPDATE contato SET NOME = ?, TELEFONE = ?, EMAIL = ? WHERE ID_CONTATO = ?";
+	        
+	        try (Connection con = new ConnectDB().getConnection();
+	             PreparedStatement preparedStatement = con.prepareStatement(query)) {
+	            
+	            preparedStatement.setString(1, contact.getName());
+	            preparedStatement.setString(2, contact.getPhone());
+	            preparedStatement.setString(3, contact.getEmail());
+	            preparedStatement.setInt(4, contact.getId());
+	            
+	            preparedStatement.executeUpdate();
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        }
+	    }
 
 }
