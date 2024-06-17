@@ -33,7 +33,6 @@ public class UserDAO {
 	        
 	    } catch (SQLException e) {
 	        e.printStackTrace();
-	        throw new SQLException("Erro ao obter usuário por email", e);
 	    }
 	    return user;
 	}
@@ -53,7 +52,6 @@ public class UserDAO {
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
-            throw new SQLException("Erro ao inserir usuário", e);
         }
     }
 
@@ -69,7 +67,6 @@ public class UserDAO {
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
-            throw new SQLException("Erro ao atualizar senha", e);
         }
     }
     

@@ -1,6 +1,5 @@
 package controller;
 
-
 import java.sql.SQLException;
 import dao.ContactDAO;
 import javafx.collections.FXCollections;
@@ -138,11 +137,6 @@ public class ContactPageController{
     }
 
     @FXML
-    public void deleteContact(ActionEvent event) {
-
-    }
-
-    @FXML
     public void updateContact(ActionEvent event) {
         AlertMessage alert = new AlertMessage();
 
@@ -170,6 +164,7 @@ public class ContactPageController{
             contactDAO.updateContact(selectedContact);
 
             alert.successMessage("Contato atualizado com sucesso!");
+            clearFields();
             table();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -177,6 +172,29 @@ public class ContactPageController{
         }
     }
 
+    @FXML
+    public void deleteContact(ActionEvent event) {
+        AlertMessage alert = new AlertMessage();
+
+        try {
+            Contact selectedContact = contactPage_Table.getSelectionModel().getSelectedItem();
+            if (selectedContact == null) {
+                alert.errorMessage("Selecione um contato para deletar.");
+                return;
+            }
+            
+            int contactId = selectedContact.getId();
+            ContactDAO contactDAO = new ContactDAO();
+            contactDAO.deleteContact(contactId);
+
+            alert.successMessage("Contato deletado com sucesso!");
+            clearFields();
+            table();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            alert.errorMessage("Ocorreu um erro ao deletar o contato.");
+        }
+    }
 
     @FXML
     public void user(MouseEvent event) {

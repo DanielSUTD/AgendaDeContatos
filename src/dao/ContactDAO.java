@@ -24,7 +24,6 @@ public class ContactDAO {
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
-            throw new SQLException("Erro ao cadastrar contato: " + e.getMessage(), e);
         }
     }
 	
@@ -48,7 +47,6 @@ public class ContactDAO {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            throw new SQLException("Erro ao buscar contatos: " + e.getMessage(), e);
         }
         
         return contacts;
@@ -70,5 +68,19 @@ public class ContactDAO {
 	            e.printStackTrace();
 	        }
 	    }
+	 
+	 
+	 public void deleteContact(int contactId) throws SQLException {
+	        String query = "DELETE FROM contato WHERE ID_CONTATO = ?";
+	        
+	        try (Connection con = new ConnectDB().getConnection();
+	             PreparedStatement preparedStatement = con.prepareStatement(query)) {
+	            
+	            preparedStatement.setInt(1, contactId);
+	            preparedStatement.executeUpdate();
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        }
+	   }
 
 }
