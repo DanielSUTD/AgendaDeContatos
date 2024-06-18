@@ -25,25 +25,24 @@ import org.mindrot.jbcrypt.BCrypt;
 
 public class ForgotPasswordController implements Initializable {
 
-	  @FXML
-	  private TextField forgotPswAnswer;
+    @FXML
+    private TextField forgotPswAnswer;
 
-	  @FXML
-	  private TextField forgotPswEmail;
-	  
-	  @FXML
-	  private Button forgotPswHomeButton;
+    @FXML
+    private TextField forgotPswEmail;
 
-	  @FXML
-	  private PasswordField forgotPswPassword;
+    @FXML
+    private Button forgotPswHomeButton;
 
-	  @FXML
-	  private Button forgotPswProceedButton;
+    @FXML
+    private PasswordField forgotPswPassword;
 
-	  @FXML
-	  private ComboBox<String> forgotPswQuestion;
+    @FXML
+    private Button forgotPswProceedButton;
 
-    // Lista de perguntas de segurança
+    @FXML
+    private ComboBox<String> forgotPswQuestion;
+
     @FXML
     private ObservableList<String> questionBoxList = FXCollections.observableArrayList(
             "Qual sua comida favorita?",
@@ -51,7 +50,6 @@ public class ForgotPasswordController implements Initializable {
             "Qual seu herói favorito?"
     );
 
-    // Método para buscar e redefinir a senha
     public void searchPassword() {
         UserDAO userDao = new UserDAO();
         AlertMessage alert = new AlertMessage();
@@ -62,52 +60,55 @@ public class ForgotPasswordController implements Initializable {
             String selectedQuestion = forgotPswQuestion.getValue() != null ? forgotPswQuestion.getValue().trim() : "";
             String answer = forgotPswAnswer.getText().trim();
 
-            // Verifica se o email está vazio
-            if (email.isEmpty()) {
-                alert.errorMessage("Digite o email!");
-                return;
-            } else if (selectedQuestion.isEmpty()) {
-                alert.errorMessage("Selecione uma pergunta de segurança!");
-                return;
+            if (validateFields(alert, email, selectedQuestion, answer, password)) {
+                processPasswordReset(userDao, alert, email, selectedQuestion, answer, password);
             }
-
-            // Obtém o usuário pelo email
-            User user = userDao.getUserByEmail(email);
-
-            // Verifica se o usuário existe
-            if (user != null) {
-                String dbSelectedQuestion = user.getQuestion();
-                String dbAnswer = user.getAnswer();
-
-                // Verifica a resposta à pergunta de segurança
-                if (dbAnswer != null && dbAnswer.equals(answer)) {
-                    // Criptografa a nova senha
-                    String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
-
-                    // Atualiza a senha no banco de dados
-                    userDao.updatePassword(email, hashedPassword);
-                    alert.successMessage("Senha atualizada!");
-                } else {
-                    alert.errorMessage("Resposta errada!");
-                }
-            } else {
-                alert.errorMessage("Usuário não encontrado!");
-            }
-
-            clearFields();
-
         } catch (SQLException e) {
-        	// Imprimindo o stack trace em caso de exceção
-            e.printStackTrace();
-            alert.errorMessage("Erro ao acessar o banco de dados: " + e.getMessage());
+            handleException(alert, e, "Erro ao acessar o banco de dados: ");
         } catch (Exception e) {
-        	// Imprimindo o stack trace em caso de exceção
-            e.printStackTrace();
-            alert.errorMessage("Ocorreu um erro ao tentar atualizar a senha." + e.getMessage());
+            handleException(alert, e, "Ocorreu um erro ao tentar atualizar a senha: ");
         }
     }
 
-    // Método para limpar os campos de texto
+    private boolean validateFields(AlertMessage alert, String email, String selectedQuestion, String answer, String password) {
+        if (email.isEmpty()) {
+            alert.errorMessage("Digite o email!");
+            return false;
+        }
+        if (selectedQuestion.isEmpty() || "Selecione uma pergunta".equals(selectedQuestion)) {
+            alert.errorMessage("Selecione uma pergunta de segurança!");
+            return false;
+        }
+        if (answer.isEmpty()) {
+            alert.errorMessage("Digite a resposta para a pergunta de segurança!");
+            return false;
+        }
+        if (password.isEmpty()) {
+            alert.errorMessage("Digite a nova senha!");
+            return false;
+        }
+        return true;
+    }
+
+    private void processPasswordReset(UserDAO userDao, AlertMessage alert, String email, String selectedQuestion, String answer, String password) throws SQLException {
+        User user = userDao.getUserByEmail(email);
+
+        if (user != null && user.getQuestion().equals(selectedQuestion) && user.getAnswer().equals(answer)) {
+            String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
+            userDao.updatePassword(email, hashedPassword);
+            alert.successMessage("Senha atualizada!");
+            clearFields();
+        } else {
+        	String message = user == null ? "Usuário não encontrado!" : "Resposta errada!";
+            alert.errorMessage(message);
+        }
+    }
+
+    private void handleException(AlertMessage alert, Exception e, String message) {
+        e.printStackTrace();
+        alert.errorMessage(message + e.getMessage());
+    }
+
     public void clearFields() {
         forgotPswEmail.setText("");
         forgotPswQuestion.getSelectionModel().clearSelection();
@@ -115,16 +116,14 @@ public class ForgotPasswordController implements Initializable {
         forgotPswPassword.setText("");
     }
 
-    // Método para retornar à tela de login
-    public void home(ActionEvent event) throws IOException {
+    public void homeScreen(ActionEvent event) throws IOException {
         Parent view = FXMLLoader.load(getClass().getResource("/view/LoginScreen.fxml"));
         Scene scene = new Scene(view);
         Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
         window.setScene(scene);
         window.show();
     }
-
-    // Método initialize para inicializar a lista de perguntas e selecionar uma pergunta padrão
+    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         forgotPswQuestion.setValue("Selecione uma pergunta");
