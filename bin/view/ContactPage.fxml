@@ -23,7 +23,7 @@
       </TableView>
       <AnchorPane layoutX="-9.0" prefHeight="540.0" prefWidth="125.0" style="-fx-background-color: white;">
          <children>
-            <ImageView fitHeight="69.0" fitWidth="74.0" layoutX="26.0" layoutY="457.0" onMouseClicked="#user">
+            <ImageView fitHeight="69.0" fitWidth="74.0" layoutX="26.0" layoutY="457.0" onMouseClicked="#clickedUser">
                <image>
                   <Image url="@../../img/user.png" />
                </image>

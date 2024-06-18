@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="391.0" prefWidth="424.0" styleClass="anchor-pane" stylesheets="@../../style/Style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.UserPageController">
+   <children>
+      <ImageView layoutX="180.0" layoutY="21.0">
+         <image>
+            <Image url="@../../img/user.png" />
+         </image>
+      </ImageView>
+      <Label layoutX="79.0" layoutY="140.0" text="E-mail" textFill="WHITE">
+         <font>
+            <Font name="Constantia" size="15.0" />
+         </font>
+      </Label>
+      <TextField fx:id="userPage_Email" layoutX="78.0" layoutY="159.0" prefHeight="27.0" prefWidth="258.0" />
+      <TextField fx:id="userPage_Name" layoutX="78.0" layoutY="113.0" prefHeight="27.0" prefWidth="258.0" />
+      <Label layoutX="79.0" layoutY="94.0" text="Nome" textFill="WHITE">
+         <font>
+            <Font name="Constantia" size="15.0" />
+         </font>
+      </Label>
+      <Label layoutX="79.0" layoutY="186.0" text="Senha" textFill="WHITE">
+         <font>
+            <Font name="Constantia" size="15.0" />
+         </font>
+      </Label>
+      <Label layoutX="80.0" layoutY="237.0" text="Alternativa" textFill="WHITE">
+         <font>
+            <Font name="Constantia" size="15.0" />
+         </font>
+      </Label>
+      <Label layoutX="78.0" layoutY="292.0" text="Resposta" textFill="WHITE">
+         <font>
+            <Font name="Constantia" size="15.0" />
+         </font>
+      </Label>
+      <TextField fx:id="userPage_Answer" layoutX="78.0" layoutY="311.0" prefHeight="27.0" prefWidth="258.0" />
+      <Button fx:id="userPage_Update" layoutX="119.0" layoutY="348.0" mnemonicParsing="false" onAction="#updateUserInformation" prefHeight="29.0" prefWidth="186.0" text="Atualizar Informações">
+         <font>
+            <Font name="Constantia Bold" size="15.0" />
+         </font>
+      </Button>
+      <ComboBox fx:id="userPage_SelectQuestion" layoutX="77.0" layoutY="256.0" prefHeight="25.0" prefWidth="260.0" />
+      <Button fx:id="userPage_Back" layoutY="348.0" mnemonicParsing="false" onAction="#back" prefHeight="29.0" prefWidth="27.0" text="&lt;">
+         <font>
+            <Font name="Constantia Bold" size="15.0" />
+         </font>
+      </Button>
+      <PasswordField fx:id="userPage_Password" layoutX="77.0" layoutY="210.0" prefHeight="27.0" prefWidth="260.0" />
+   </children>
+</AnchorPane>

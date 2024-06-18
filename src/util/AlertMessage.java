@@ -5,8 +5,10 @@ import javafx.scene.control.Alert.AlertType;
 
 public class AlertMessage {
 	    
+	    //Atributo
 	    private Alert alert;
 	    
+	    //Mensagem para erros!
 	    public void errorMessage(String message){
 	        
 	        alert = new Alert(AlertType.ERROR);
@@ -17,6 +19,7 @@ public class AlertMessage {
 	        
 	    }
 	    
+	    //Mensagem para acertos!
 	    public void successMessage(String message){
 	        
 	        alert = new Alert(AlertType.INFORMATION);

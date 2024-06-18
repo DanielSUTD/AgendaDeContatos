@@ -43,6 +43,7 @@ public class ForgotPasswordController implements Initializable {
     @FXML
     private ComboBox<String> forgotPsw_Question;
 
+    // Lista de perguntas de segurança
     @FXML
     private ObservableList<String> questionBoxList = FXCollections.observableArrayList(
             "Qual sua comida favorita?",
@@ -50,6 +51,7 @@ public class ForgotPasswordController implements Initializable {
             "Qual seu herói favorito?"
     );
 
+    // Método para buscar e redefinir a senha
     public void searchPassword() {
         UserDAO userDao = new UserDAO();
         AlertMessage alert = new AlertMessage();
@@ -60,6 +62,7 @@ public class ForgotPasswordController implements Initializable {
             String selectedQuestion = forgotPsw_Question.getValue() != null ? forgotPsw_Question.getValue().trim() : "";
             String answer = forgotPsw_Answer.getText().trim();
 
+            // Verifica se o email está vazio
             if (email.isEmpty()) {
                 alert.errorMessage("Digite o email!");
                 return;
@@ -68,18 +71,20 @@ public class ForgotPasswordController implements Initializable {
                 return;
             }
 
+            // Obtém o usuário pelo email
             User user = userDao.getUserByEmail(email);
 
+            // Verifica se o usuário existe
             if (user != null) {
                 String dbSelectedQuestion = user.getQuestion();
                 String dbAnswer = user.getAnswer();
 
-                // Verifica Resposta
+                // Verifica a resposta à pergunta de segurança
                 if (dbAnswer != null && dbAnswer.equals(answer)) {
-                    // Criptografando nova senha
+                    // Criptografa a nova senha
                     String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
 
-                    // Atualizando a senha
+                    // Atualiza a senha no banco de dados
                     userDao.updatePassword(email, hashedPassword);
                     alert.successMessage("Senha atualizada!");
                 } else {
@@ -92,15 +97,17 @@ public class ForgotPasswordController implements Initializable {
             clearFields();
 
         } catch (SQLException e) {
+        	// Imprimindo o stack trace em caso de exceção
             e.printStackTrace();
             alert.errorMessage("Erro ao acessar o banco de dados: " + e.getMessage());
         } catch (Exception e) {
+        	// Imprimindo o stack trace em caso de exceção
             e.printStackTrace();
             alert.errorMessage("Ocorreu um erro ao tentar atualizar a senha." + e.getMessage());
         }
     }
 
-
+    // Método para limpar os campos de texto
     public void clearFields() {
         forgotPsw_Email.setText("");
         forgotPsw_Question.getSelectionModel().clearSelection();
@@ -108,6 +115,7 @@ public class ForgotPasswordController implements Initializable {
         forgotPsw_Password.setText("");
     }
 
+    // Método para retornar à tela de login
     public void home(ActionEvent event) throws IOException {
         Parent view = FXMLLoader.load(getClass().getResource("/view/LoginScreen.fxml"));
         Scene scene = new Scene(view);
@@ -116,6 +124,7 @@ public class ForgotPasswordController implements Initializable {
         window.show();
     }
 
+    // Método initialize para inicializar a lista de perguntas e selecionar uma pergunta padrão
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         forgotPsw_Question.setValue("Selecione uma pergunta");

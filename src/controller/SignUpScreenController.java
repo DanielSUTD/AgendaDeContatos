@@ -50,9 +50,11 @@ public class SignUpScreenController implements Initializable {
     @FXML
     private ComboBox<String> signUp_SelectQuestion;
 
+    // Lista de perguntas de segurança
     @FXML
     private ObservableList<String> questionBoxList = FXCollections.observableArrayList("Qual sua comida favorita?", "Qual seu jogo favorito?", "Qual seu herói favorito?");
 
+ // Método para registrar um novo usuário
     public void signUp(ActionEvent event) throws IOException {
     	//Instanciando a mensagem de alerta
         AlertMessage alert = new AlertMessage();
@@ -89,7 +91,7 @@ public class SignUpScreenController implements Initializable {
             // Criptografando a senha
             String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
 
-            
+            //Verificando se existe um usuário com aquele email
             User user = userDao.getUserByEmail(email);
             
             //Verificando se o Email já está em uso
@@ -108,15 +110,17 @@ public class SignUpScreenController implements Initializable {
             clearFields();
 
         } catch (SQLException e) {
+        	// Imprimindo o stack trace em caso de exceção
             e.printStackTrace();
             alert.errorMessage("Erro ao cadastrar conta: " + e.getMessage());
         } catch (Exception e) {
+        	// Imprimindo o stack trace em caso de exceção
             e.printStackTrace();
             alert.errorMessage("Ocorreu um erro ao tentar cadastrar: " + e.getMessage());
         }
     }
-
-
+    
+    // Método para limpar os campos de texto
     public void clearFields() {
         signUp_Name.setText("");
         signUp_Email.setText("");
@@ -126,6 +130,7 @@ public class SignUpScreenController implements Initializable {
         signUp_Answer.setText("");
     }
 
+ // Método para retornar à tela de login
     public void loginScreen(ActionEvent event) throws IOException {
         Parent view = FXMLLoader.load(getClass().getResource("/view/LoginScreen.fxml"));
         Scene scene = new Scene(view);
@@ -134,6 +139,7 @@ public class SignUpScreenController implements Initializable {
         window.show();
     }
     
+    // Método initialize para inicializar a lista de perguntas e selecionar uma pergunta padrão
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         signUp_SelectQuestion.setValue("Selecione uma pergunta");
