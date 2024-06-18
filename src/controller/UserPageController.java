@@ -25,54 +25,46 @@ import org.mindrot.jbcrypt.BCrypt;
 
 public class UserPageController implements Initializable {
 
-	 @FXML
-	 private TextField userPageAnswer;
+    @FXML
+    private TextField userPageAnswer;
 
-	 @FXML
-	 private Button userPageBackButton;
+    @FXML
+    private Button userPageBackButton;
 
-	 @FXML
-	 private TextField userPageEmail;
+    @FXML
+    private TextField userPageEmail;
 
-	 @FXML
-	 private TextField userPageName;
+    @FXML
+    private TextField userPageName;
 
-	 @FXML
-	 private PasswordField userPagePassword;
+    @FXML
+    private PasswordField userPagePassword;
 
-	 @FXML
-	 private ComboBox<String> userPageSelectQuestion;
+    @FXML
+    private ComboBox<String> userPageSelectQuestion;
 
-	 @FXML
-	 private Button userPageUpdateButton;
+    @FXML
+    private Button userPageUpdateButton;
 
-
-    //Lista com perguntas de ssegurança
     private ObservableList<String> questionBoxList = FXCollections.observableArrayList(
             "Qual sua comida favorita?",
             "Qual seu jogo favorito?",
             "Qual seu herói favorito?"
     );
 
-    //Id do usuário atual
     private int userID;
-    
+
     // Método para definir o ID do usuário e carregar seus dados
     public void setUserId(int userID) {
         this.userID = userID;
-     // Carrega os dados do usuário com base no ID
-        loadUserData();
+        uploadUserInformation();
     }
 
- // Método privado para carregar os dados do usuário
-    private void loadUserData() {
-    	// Instancia o DAO do usuário
+    // Método privado para carregar os dados do usuário
+    private void uploadUserInformation() {
         UserDAO userDAO = new UserDAO();
         try {
-        	// Obtém o usuário do banco de dados pelo ID
             User user = userDAO.getUserById(userID);
-            
-            //Coloca cada dado do banco de dados no campo de texto correspondente!
             if (user != null) {
                 userPageName.setText(user.getName());
                 userPageEmail.setText(user.getEmail());
@@ -80,55 +72,63 @@ public class UserPageController implements Initializable {
                 userPageAnswer.setText(user.getAnswer());
             }
         } catch (SQLException e) {
-        	// Imprimindo o stack trace em caso de exceção
-            e.printStackTrace();
+            handleException(e, "Erro ao carregar os dados do usuário.");
         }
     }
 
-    // Método para atualizar as informações do usuário
     @FXML
     public void updateUserInformation(ActionEvent event) {
-    	//Instanciando mensagem de alerta
         AlertMessage alert = new AlertMessage();
-
-        
         try {
-        	//Colocando cada caixa de texto em uma string!
-            String name = userPageName.getText().trim();
-            String email = userPageEmail.getText().trim();
-            String password = userPagePassword.getText().trim(); 
-            String question = userPageSelectQuestion.getValue() != null ? userPageSelectQuestion.getValue().trim() : "";
-            String answer = userPageAnswer.getText().trim();
-            
-
-            //Criptografando senha
-            String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
-
-            //Instanciando o usuário com seus novos dados!
-            User updatedUser = new User(userID, name, email, hashedPassword, question, answer);
-            
             UserDAO userDAO = new UserDAO();
-            //Enviando dados para o banco de dados!
-            userDAO.updateUser(updatedUser);
+            User user = userDAO.getUserById(userID);
+            if (user == null) {
+                alert.errorMessage("Usuário não encontrado.");
+                return;
+            }
 
-            //Mensagem
+            updateFields(user);
+
+            // Atualizar o usuário no banco de dados
+            userDAO.updateUser(user);
             alert.successMessage("Informações do usuário atualizadas com sucesso!");
         } catch (SQLException e) {
-        	// Imprimindo o stack trace em caso de exceção
-            e.printStackTrace();
+            handleException(e, "Ocorreu um erro ao atualizar as informações do usuário.");
         } catch (Exception e) {
-        	// Imprimindo o stack trace em caso de exceção
-            e.printStackTrace();
+            handleException(e, "Erro inesperado ao atualizar as informações do usuário.");
         }
     }
 
- // Método para voltar à página anterior
+    private void updateFields(User user) {
+        if (!userPageName.getText().trim().isEmpty()) {
+            user.setName(userPageName.getText().trim());
+        }
+        
+        if (!userPageEmail.getText().trim().isEmpty()) {
+            user.setEmail(userPageEmail.getText().trim());
+        }
+        
+        if (!userPagePassword.getText().trim().isEmpty()) {
+            String hashedPassword = BCrypt.hashpw(userPagePassword.getText().trim(), BCrypt.gensalt());
+            user.setPassword(hashedPassword);
+        }
+        
+        if (userPageSelectQuestion.getValue() != null && !userPageSelectQuestion.getValue().trim().isEmpty()) {
+            user.setQuestion(userPageSelectQuestion.getValue().trim());
+        }
+        
+        if (!userPageAnswer.getText().trim().isEmpty()) {
+            user.setAnswer(userPageAnswer.getText().trim());
+        }
+        
+    }
+
+    // Método para voltar à página anterior
     @FXML
-    public void back(ActionEvent event) throws IOException {
+    public void clickReturn(ActionEvent event) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/ContactPage.fxml"));
         Parent view = loader.load();
 
-        // Passando o ID do usuário para o ContactPageController
         ContactPageController contactPageController = loader.getController();
         contactPageController.setUserId(userID);
 
@@ -137,11 +137,16 @@ public class UserPageController implements Initializable {
         window.setScene(scene);
         window.show();
     }
+
+    // Método para lidar com exceções e mostrar uma mensagem de erro ao usuário
+    private void handleException(Exception e, String message) {
+        e.printStackTrace();
+        new AlertMessage().errorMessage(message + " " + e.getMessage());
+    }
     
-   // Método initialize para inicializar a lista de perguntas
+    // Método initialize para inicializar a lista de perguntas
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         userPageSelectQuestion.setItems(questionBoxList);
     }
-
 }

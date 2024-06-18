@@ -51,7 +51,7 @@
          </font>
       </Button>
       <ComboBox fx:id="userPageSelectQuestion" layoutX="77.0" layoutY="256.0" prefHeight="25.0" prefWidth="260.0" />
-      <Button fx:id="userPageBackButton" layoutY="348.0" mnemonicParsing="false" onAction="#back" prefHeight="29.0" prefWidth="27.0" text="&lt;">
+      <Button fx:id="userPageBackButton" layoutY="348.0" mnemonicParsing="false" onAction="#clickReturn" prefHeight="29.0" prefWidth="27.0" text="&lt;">
          <font>
             <Font name="Constantia Bold" size="15.0" />
          </font>
