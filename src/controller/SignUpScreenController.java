@@ -23,46 +23,44 @@ import util.AlertMessage;
 import model.User;
 import org.mindrot.jbcrypt.BCrypt;
 
-
 public class SignUpScreenController implements Initializable {
 
-	 @FXML
-	 private TextField signUpAnswer;
-
-	 @FXML
-	 private PasswordField signUpConfirmPassword;
-
-	 @FXML
-	 private TextField signUpEmail;
-
-	 @FXML
-	 private Button signUpEnterButton;
-
-	 @FXML
-	 private TextField signUpName;
-
-	 @FXML
-	 private PasswordField signUpPassword;
-
-	 @FXML
-	 private Button signUpRegisterButton;
-
-	 @FXML
-	 private ComboBox<String> signUpSelectQuestion;
-
-    // Lista de perguntas de segurança
     @FXML
-    private ObservableList<String> questionBoxList = FXCollections.observableArrayList("Qual sua comida favorita?", "Qual seu jogo favorito?", "Qual seu herói favorito?");
+    private TextField signUpAnswer;
 
- // Método para registrar um novo usuário
+    @FXML
+    private PasswordField signUpConfirmPassword;
+
+    @FXML
+    private TextField signUpEmail;
+
+    @FXML
+    private Button signUpEnterButton;
+
+    @FXML
+    private TextField signUpName;
+
+    @FXML
+    private PasswordField signUpPassword;
+
+    @FXML
+    private Button signUpRegisterButton;
+
+    @FXML
+    private ComboBox<String> signUpSelectQuestion;
+
+    @FXML
+    private ObservableList<String> questionBoxList = FXCollections.observableArrayList(
+        "Qual sua comida favorita?", 
+        "Qual seu jogo favorito?", 
+        "Qual seu herói favorito?"
+    );
+
     public void signUp(ActionEvent event) throws IOException {
-    	//Instanciando a mensagem de alerta
         AlertMessage alert = new AlertMessage();
-        //Instanciando o Data Acess Object do Usuário
         UserDAO userDao = new UserDAO();
 
         try {
-        	//Colocando as palavras nas caixas de texto no objeto String
             String name = signUpName.getText().trim();
             String email = signUpEmail.getText().trim();
             String password = signUpPassword.getText().trim();
@@ -70,57 +68,77 @@ public class SignUpScreenController implements Initializable {
             String question = signUpSelectQuestion.getValue();
             String answer = signUpAnswer.getText().trim();
 
-            //Verificando se existe alguma caixa de texto vazia
-            if (name.isEmpty() || email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty() || question.isEmpty() || answer.isEmpty()) {
-                alert.errorMessage("Preencha todos os campos!");
-                return;
+            if (!validateFields(alert, name, email, password, confirmPassword, question, answer)) {
+            	return;
             }
 
-            //Verificando se existe a senha é menor que 8 caracteres
-            if (password.length() < 8) {
-                alert.errorMessage("A senha deve ter pelo menos 8 caracteres!");
-                return;
-            }
-            
-            //Verificando se as senhas são iguais
-            if (!password.equals(confirmPassword)) {
-                alert.errorMessage("Coloque senhas iguais nos campos!");
-                return;
+            if (isEmailInUse(alert, userDao, email)) {
+            	return;
             }
 
-            // Criptografando a senha
             String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
-
-            //Verificando se existe um usuário com aquele email
-            User user = userDao.getUserByEmail(email);
-            
-            //Verificando se o Email já está em uso
-            if (user != null) {
-                alert.errorMessage("O email já está em uso!");
-                return;
-            }
-
-            //Instanciando novo usuário na memória
             User newUser = new User(name, email, hashedPassword, question, answer);
-            //Inserindo novo usuário no banco de dados
             userDao.insertUser(newUser);
-            
+
             alert.successMessage("Conta cadastrada!");
-            //Limpando caixas de texto
             clearFields();
 
         } catch (SQLException e) {
-        	// Imprimindo o stack trace em caso de exceção
-            e.printStackTrace();
-            alert.errorMessage("Erro ao cadastrar conta: " + e.getMessage());
+            handleException(alert, e, "Erro ao cadastrar conta: ");
         } catch (Exception e) {
-        	// Imprimindo o stack trace em caso de exceção
-            e.printStackTrace();
-            alert.errorMessage("Ocorreu um erro ao tentar cadastrar: " + e.getMessage());
+            handleException(alert, e, "Ocorreu um erro ao tentar cadastrar: ");
         }
     }
-    
-    // Método para limpar os campos de texto
+
+    private boolean validateFields(AlertMessage alert, String name, String email, String password, 
+    String confirmPassword, String question, String answer) {
+        boolean checkFields = checkEmptyFields(alert, name, email, password, confirmPassword, question, answer);
+        boolean checkPassword = checkPasswordLength(alert, password);
+        boolean checkPasswordMatch = checkPasswordMatch(alert, password, confirmPassword);
+        
+        return checkFields && checkPassword && checkPasswordMatch;
+    }
+
+    private boolean checkEmptyFields(AlertMessage alert, String name, String email, String password, 
+    String confirmPassword, String question, String answer) {
+        if (name.isEmpty() || email.isEmpty() || password.isEmpty() || 
+            confirmPassword.isEmpty() || "Selecione uma pergunta".equals(question) || answer.isEmpty()) {
+            alert.errorMessage("Preencha todos os campos!");
+            return false;
+        }
+        return true;
+    }
+
+    private boolean checkPasswordLength(AlertMessage alert, String password) {
+        if (password.length() < 8) {
+            alert.errorMessage("A senha deve ter pelo menos 8 caracteres!");
+            return false;
+        }
+        return true;
+    }
+
+    private boolean checkPasswordMatch(AlertMessage alert, String password, String confirmPassword) {
+        if (!password.equals(confirmPassword)) {
+            alert.errorMessage("Coloque senhas iguais nos campos!");
+            return false;
+        }
+        return true;
+    }
+
+    private boolean isEmailInUse(AlertMessage alert, UserDAO userDao, String email) throws SQLException {
+        User user = userDao.getUserByEmail(email);
+        if (user != null) {
+            alert.errorMessage("O email já está em uso!");
+            return true;
+        }
+        return false;
+    }
+
+    private void handleException(AlertMessage alert, Exception e, String message) {
+        e.printStackTrace();
+        alert.errorMessage(message + e.getMessage());
+    }
+
     public void clearFields() {
         signUpName.setText("");
         signUpEmail.setText("");
@@ -130,16 +148,18 @@ public class SignUpScreenController implements Initializable {
         signUpAnswer.setText("");
     }
 
- // Método para retornar à tela de login
     public void loginScreen(ActionEvent event) throws IOException {
-        Parent view = FXMLLoader.load(getClass().getResource("/view/LoginScreen.fxml"));
+        loadScreen(event, "/view/LoginScreen.fxml");
+    }
+
+    private void loadScreen(ActionEvent event, String fxmlPath) throws IOException {
+        Parent view = FXMLLoader.load(getClass().getResource(fxmlPath));
         Scene scene = new Scene(view);
         Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
         window.setScene(scene);
         window.show();
     }
     
-    // Método initialize para inicializar a lista de perguntas e selecionar uma pergunta padrão
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         signUpSelectQuestion.setValue("Selecione uma pergunta");
