@@ -26,29 +26,29 @@ import org.mindrot.jbcrypt.BCrypt;
 
 public class SignUpScreenController implements Initializable {
 
-    @FXML
-    private TextField signUp_Answer;
+	 @FXML
+	 private TextField signUpAnswer;
 
-    @FXML
-    private Button signUp_Button;
+	 @FXML
+	 private PasswordField signUpConfirmPassword;
 
-    @FXML
-    private Button signUp_EnterButton;
+	 @FXML
+	 private TextField signUpEmail;
 
-    @FXML
-    private PasswordField signUp_ConfirmPassword;
+	 @FXML
+	 private Button signUpEnterButton;
 
-    @FXML
-    private TextField signUp_Email;
+	 @FXML
+	 private TextField signUpName;
 
-    @FXML
-    private TextField signUp_Name;
+	 @FXML
+	 private PasswordField signUpPassword;
 
-    @FXML
-    private PasswordField signUp_Password;
+	 @FXML
+	 private Button signUpRegisterButton;
 
-    @FXML
-    private ComboBox<String> signUp_SelectQuestion;
+	 @FXML
+	 private ComboBox<String> signUpSelectQuestion;
 
     // Lista de perguntas de segurança
     @FXML
@@ -63,12 +63,12 @@ public class SignUpScreenController implements Initializable {
 
         try {
         	//Colocando as palavras nas caixas de texto no objeto String
-            String name = signUp_Name.getText().trim();
-            String email = signUp_Email.getText().trim();
-            String password = signUp_Password.getText().trim();
-            String confirmPassword = signUp_ConfirmPassword.getText().trim();
-            String question = signUp_SelectQuestion.getValue();
-            String answer = signUp_Answer.getText().trim();
+            String name = signUpName.getText().trim();
+            String email = signUpEmail.getText().trim();
+            String password = signUpPassword.getText().trim();
+            String confirmPassword = signUpConfirmPassword.getText().trim();
+            String question = signUpSelectQuestion.getValue();
+            String answer = signUpAnswer.getText().trim();
 
             //Verificando se existe alguma caixa de texto vazia
             if (name.isEmpty() || email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty() || question.isEmpty() || answer.isEmpty()) {
@@ -122,12 +122,12 @@ public class SignUpScreenController implements Initializable {
     
     // Método para limpar os campos de texto
     public void clearFields() {
-        signUp_Name.setText("");
-        signUp_Email.setText("");
-        signUp_Password.setText("");
-        signUp_ConfirmPassword.setText("");
-        signUp_SelectQuestion.getSelectionModel().clearSelection();
-        signUp_Answer.setText("");
+        signUpName.setText("");
+        signUpEmail.setText("");
+        signUpPassword.setText("");
+        signUpConfirmPassword.setText("");
+        signUpSelectQuestion.getSelectionModel().clearSelection();
+        signUpAnswer.setText("");
     }
 
  // Método para retornar à tela de login
@@ -142,7 +142,7 @@ public class SignUpScreenController implements Initializable {
     // Método initialize para inicializar a lista de perguntas e selecionar uma pergunta padrão
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        signUp_SelectQuestion.setValue("Selecione uma pergunta");
-        signUp_SelectQuestion.setItems(questionBoxList);
+        signUpSelectQuestion.setValue("Selecione uma pergunta");
+        signUpSelectQuestion.setItems(questionBoxList);
     }
 }

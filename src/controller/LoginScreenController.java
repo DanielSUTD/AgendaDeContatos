@@ -1,6 +1,7 @@
 package controller;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import org.mindrot.jbcrypt.BCrypt;
 import application.MyContacts;
 import dao.UserDAO;
@@ -21,19 +22,19 @@ import util.AlertMessage;
 public class LoginScreenController {
 
     @FXML
-    private Button login_EnterButton;
+    private TextField loginEmail;
 
     @FXML
-    private TextField login_Email;
+    private Button loginEnterButton;
 
     @FXML
-    private Hyperlink login_ForgotPassword;
+    private Hyperlink loginForgotPassword;
 
     @FXML
-    private PasswordField login_Password;
+    private PasswordField loginPassword;
 
     @FXML
-    private Button login_RegisterButton;
+    private Button loginRegisterButton;
 
     private MyContacts main;
 
@@ -44,61 +45,57 @@ public class LoginScreenController {
 
     // Método para realizar o login
     public void login(ActionEvent event) throws IOException {
-        // Instancia uma mensagem de alerta
-        AlertMessage alert = new AlertMessage();
-        // Instancia UserDAO para acessar métodos de banco de dados relacionados ao usuário
-        UserDAO userDao = new UserDAO();
-
         try {
-            // Obtém os valores dos campos de email e senha
-            String email = login_Email.getText().trim();
-            String password = login_Password.getText().trim();
+            String email = loginEmail.getText().trim();
+            String password = loginPassword.getText().trim();
 
-            // Verifica se os campos de email ou senha estão vazios
-            if (email.isEmpty() || password.isEmpty()) {
-                alert.errorMessage("Email/Senha incorreta!");
-            } else {
-                // Obtém o usuário pelo email
-                User user = userDao.getUserByEmail(email);
-
-                // Verifica se o usuário existe e se a senha está correta
-                if (user != null && BCrypt.checkpw(password, user.getPassword())) {
-                    alert.successMessage("Login bem sucedido!");
-                    // Chama o método para carregar a tela de contatos passando o ID do usuário
-                    contactHomePage(event, user.getId());
-                } else {
-                    alert.errorMessage("Email/Senha incorreta!");
-                }
+            if (validateFields(email, password)) {
+                authenticateUser(event, email, password);
             }
-            // Limpa os campos de texto após a tentativa de login
             clearFields();
         } catch (IOException e) {
-        	// Imprimindo o stack trace em caso de exceção
             e.printStackTrace();
-            alert.errorMessage("Ocorreu um erro ao carregar a tela de contato.");
         } catch (Exception e) {
-        	// Imprimindo o stack trace em caso de exceção
             e.printStackTrace();
-            alert.errorMessage("Ocorreu um erro ao tentar fazer login.");
+        }
+    }
+
+    private boolean validateFields(String email, String password) {
+        AlertMessage alert = new AlertMessage();
+        if (email.isEmpty() || password.isEmpty()) {
+            alert.errorMessage("Email/Senha incorreta!");
+            return false;
+        }
+        return true;
+    }
+
+    private void authenticateUser(ActionEvent event, String email, String password) throws IOException, SQLException {
+        AlertMessage alert = new AlertMessage();
+        UserDAO userDao = new UserDAO();
+        User user = userDao.getUserByEmail(email);
+
+        if (user != null && BCrypt.checkpw(password, user.getPassword())) {
+            alert.successMessage("Login bem sucedido!");
+            loadContactHomePage(event, user.getId());
+        } else {
+            alert.errorMessage("Email/Senha incorreta!");
         }
     }
 
     // Método para limpar os campos de texto
     public void clearFields() {
-        login_Email.setText("");
-        login_Password.setText("");
+        loginEmail.setText("");
+        loginPassword.setText("");
     }
 
     // Método para carregar a tela de contatos
-    public void contactHomePage(ActionEvent event, int userID) throws IOException {
+    private void loadContactHomePage(ActionEvent event, int userID) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/ContactPage.fxml"));
         Parent view = loader.load();
 
-        // Passa o ID do usuário para o ContactPageController
         ContactPageController contactPageController = loader.getController();
         contactPageController.setUserId(userID);
 
-        // Cria uma nova cena e a define no palco atual
         Scene scene = new Scene(view);
         Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
         window.setScene(scene);
@@ -107,16 +104,16 @@ public class LoginScreenController {
 
     // Método para carregar a tela de cadastro
     public void signUpScreen(ActionEvent event) throws IOException {
-        Parent view = FXMLLoader.load(getClass().getResource("/view/SignUpScreen.fxml"));
-        Scene scene = new Scene(view);
-        Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        window.setScene(scene);
-        window.show();
+        loadScreen(event, "/view/SignUpScreen.fxml");
     }
 
     // Método para carregar a tela de "Esqueceu a senha"
     public void forgotPassword(ActionEvent event) throws IOException {
-        Parent view = FXMLLoader.load(getClass().getResource("/view/ForgotPassword.fxml"));
+        loadScreen(event, "/view/ForgotPassword.fxml");
+    }
+
+    private void loadScreen(ActionEvent event, String fxmlPath) throws IOException {
+        Parent view = FXMLLoader.load(getClass().getResource(fxmlPath));
         Scene scene = new Scene(view);
         Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
         window.setScene(scene);

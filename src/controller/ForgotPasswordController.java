@@ -25,23 +25,23 @@ import org.mindrot.jbcrypt.BCrypt;
 
 public class ForgotPasswordController implements Initializable {
 
-    @FXML
-    private TextField forgotPsw_Answer;
+	  @FXML
+	  private TextField forgotPswAnswer;
 
-    @FXML
-    private TextField forgotPsw_Email;
+	  @FXML
+	  private TextField forgotPswEmail;
+	  
+	  @FXML
+	  private Button forgotPswHomeButton;
 
-    @FXML
-    private Button forgotPsw_HomeButton;
+	  @FXML
+	  private PasswordField forgotPswPassword;
 
-    @FXML
-    private PasswordField forgotPsw_Password;
+	  @FXML
+	  private Button forgotPswProceedButton;
 
-    @FXML
-    private Button forgotPsw_ProceedButton;
-
-    @FXML
-    private ComboBox<String> forgotPsw_Question;
+	  @FXML
+	  private ComboBox<String> forgotPswQuestion;
 
     // Lista de perguntas de segurança
     @FXML
@@ -57,10 +57,10 @@ public class ForgotPasswordController implements Initializable {
         AlertMessage alert = new AlertMessage();
 
         try {
-            String email = forgotPsw_Email.getText().trim();
-            String password = forgotPsw_Password.getText().trim();
-            String selectedQuestion = forgotPsw_Question.getValue() != null ? forgotPsw_Question.getValue().trim() : "";
-            String answer = forgotPsw_Answer.getText().trim();
+            String email = forgotPswEmail.getText().trim();
+            String password = forgotPswPassword.getText().trim();
+            String selectedQuestion = forgotPswQuestion.getValue() != null ? forgotPswQuestion.getValue().trim() : "";
+            String answer = forgotPswAnswer.getText().trim();
 
             // Verifica se o email está vazio
             if (email.isEmpty()) {
@@ -109,10 +109,10 @@ public class ForgotPasswordController implements Initializable {
 
     // Método para limpar os campos de texto
     public void clearFields() {
-        forgotPsw_Email.setText("");
-        forgotPsw_Question.getSelectionModel().clearSelection();
-        forgotPsw_Answer.setText("");
-        forgotPsw_Password.setText("");
+        forgotPswEmail.setText("");
+        forgotPswQuestion.getSelectionModel().clearSelection();
+        forgotPswAnswer.setText("");
+        forgotPswPassword.setText("");
     }
 
     // Método para retornar à tela de login
@@ -127,7 +127,7 @@ public class ForgotPasswordController implements Initializable {
     // Método initialize para inicializar a lista de perguntas e selecionar uma pergunta padrão
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        forgotPsw_Question.setValue("Selecione uma pergunta");
-        forgotPsw_Question.setItems(questionBoxList);
+        forgotPswQuestion.setValue("Selecione uma pergunta");
+        forgotPswQuestion.setItems(questionBoxList);
     }
 }

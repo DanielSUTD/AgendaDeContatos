@@ -25,38 +25,39 @@ import util.AlertMessage;
 
 public class ContactPageController{
 
-    @FXML
-    private Button contactPage_Delete;
+	 @FXML
+	 private Button contactPageDeleteButton;
 
-    @FXML
-    private TextField contactPage_Email;
+	 @FXML
+	 private TextField contactPageEmail;
 
-    @FXML
-    private TableColumn<Contact, String> contactPage_EmailColumn;
+	 @FXML
+	 private TableColumn<Contact, String> contactPageEmailColumn;
 
-    @FXML
-    private TableColumn<Contact, Integer> contactPage_IDColumn;
+	 @FXML
+	 private TableColumn<Contact, Integer> contactPageIDColumn;
 
-    @FXML
-    private TextField contactPage_Name;
+	 @FXML
+	 private TextField contactPageName;
 
-    @FXML
-    private TableColumn<Contact, String> contactPage_NameColumn;
+	 @FXML
+	 private TableColumn<Contact, String> contactPageNameColumn;
 
-    @FXML
-    private TextField contactPage_Phone;
+	 @FXML
+	 private TextField contactPagePhone;
 
-    @FXML
-    private TableColumn<Contact, String> contactPage_PhoneColumn;
+	 @FXML
+	 private TableColumn<Contact, String> contactPagePhoneColumn;
 
-    @FXML
-    private Button contactPage_SaveButton;
+	 @FXML
+	 private Button contactPageSaveButton;
 
-    @FXML
-    private TableView<Contact> contactPage_Table;
+	 @FXML
+	 private Button contactPageUpdateButton;
 
-    @FXML
-    private Button contactPage_Update;
+	 @FXML
+	 private TableView<Contact> contactPageTable;
+
     
     //List para contatos
     private ObservableList<Contact> contacts = FXCollections.observableArrayList();
@@ -77,9 +78,9 @@ public class ContactPageController{
     	 AlertMessage alert = new AlertMessage();  
 
     	    try {
-    	        String name = contactPage_Name.getText().trim();
-    	        String phone = contactPage_Phone.getText().trim();
-    	        String email = contactPage_Email.getText().trim();
+    	        String name = contactPageName.getText().trim();
+    	        String phone = contactPagePhone.getText().trim();
+    	        String email = contactPageEmail.getText().trim();
 
     	        // Verifica se os campos obrigatórios estão preenchidos
     	        if (name.isEmpty() || phone.isEmpty()) {
@@ -111,28 +112,28 @@ public class ContactPageController{
     
 	//Limpando campos de texto!
     private void clearFields() {
-        contactPage_Name.setText("");
-        contactPage_Phone.setText("");
-        contactPage_Email.setText("");
+        contactPageName.setText("");
+        contactPagePhone.setText("");
+        contactPageEmail.setText("");
     }
     
     // Método para carregar a tabela de contatos
     public void table() {
     	// Define as propriedades das colunas
-    	 contactPage_IDColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
-         contactPage_NameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-         contactPage_PhoneColumn.setCellValueFactory(new PropertyValueFactory<>("phone"));
-         contactPage_EmailColumn.setCellValueFactory(new PropertyValueFactory<>("email"));
+    	 contactPageIDColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
+         contactPageNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+         contactPagePhoneColumn.setCellValueFactory(new PropertyValueFactory<>("phone"));
+         contactPageEmailColumn.setCellValueFactory(new PropertyValueFactory<>("email"));
 
          // Configura um evento de clique nas linhas da tabela
-         contactPage_Table.setRowFactory(tv -> {
+         contactPageTable.setRowFactory(tv -> {
              TableRow<Contact> row = new TableRow<>();
              row.setOnMouseClicked(event -> {
                  if (event.getClickCount() == 1 && (!row.isEmpty())) {
                      Contact contact = row.getItem();
-                     contactPage_Name.setText(contact.getName());
-                     contactPage_Phone.setText(contact.getPhone());
-                     contactPage_Email.setText(contact.getEmail());
+                     contactPageName.setText(contact.getName());
+                     contactPagePhone.setText(contact.getPhone());
+                     contactPageEmail.setText(contact.getEmail());
                  }
              });
              return row;
@@ -142,7 +143,7 @@ public class ContactPageController{
          ContactDAO contactDAO = new ContactDAO();
          try {
              contacts = contactDAO.getContacts(userID);
-             contactPage_Table.setItems(contacts);
+             contactPageTable.setItems(contacts);
          } catch (SQLException e) {
              e.printStackTrace();
              new AlertMessage().errorMessage("Erro ao carregar contatos: " + e.getMessage());
@@ -162,15 +163,15 @@ public class ContactPageController{
 
         try {
         	//Selecionando o contato
-            Contact selectedContact = contactPage_Table.getSelectionModel().getSelectedItem();
+            Contact selectedContact = contactPageTable.getSelectionModel().getSelectedItem();
             if (selectedContact == null) {
                 alert.errorMessage("Selecione um contato para atualizar.");
                 return;
             }
 
-            String name = contactPage_Name.getText().trim();
-            String phone = contactPage_Phone.getText().trim();
-            String email = contactPage_Email.getText().trim();
+            String name = contactPageName.getText().trim();
+            String phone = contactPagePhone.getText().trim();
+            String email = contactPageEmail.getText().trim();
 
             if (name.isEmpty() || phone.isEmpty()) {
                 alert.errorMessage("Preencha os campos necessários!");
@@ -204,7 +205,7 @@ public class ContactPageController{
 
         try {
         	//Selecionando um contato
-            Contact selectedContact = contactPage_Table.getSelectionModel().getSelectedItem();
+            Contact selectedContact = contactPageTable.getSelectionModel().getSelectedItem();
             if (selectedContact == null) {
                 alert.errorMessage("Selecione um contato para deletar.");
                 return;

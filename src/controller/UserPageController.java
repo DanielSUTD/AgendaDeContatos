@@ -25,26 +25,27 @@ import org.mindrot.jbcrypt.BCrypt;
 
 public class UserPageController implements Initializable {
 
-    @FXML
-    private TextField userPage_Answer;
+	 @FXML
+	 private TextField userPageAnswer;
 
-    @FXML
-    private TextField userPage_Email;
+	 @FXML
+	 private Button userPageBackButton;
 
-    @FXML
-    private TextField userPage_Name;
+	 @FXML
+	 private TextField userPageEmail;
 
-    @FXML
-    private PasswordField userPage_Password;
+	 @FXML
+	 private TextField userPageName;
 
-    @FXML
-    private ComboBox<String> userPage_SelectQuestion;
+	 @FXML
+	 private PasswordField userPagePassword;
 
-    @FXML
-    private Button userPage_Update;
+	 @FXML
+	 private ComboBox<String> userPageSelectQuestion;
 
-    @FXML
-    private Button userPage_Back;
+	 @FXML
+	 private Button userPageUpdateButton;
+
 
     //Lista com perguntas de ssegurança
     private ObservableList<String> questionBoxList = FXCollections.observableArrayList(
@@ -73,10 +74,10 @@ public class UserPageController implements Initializable {
             
             //Coloca cada dado do banco de dados no campo de texto correspondente!
             if (user != null) {
-                userPage_Name.setText(user.getName());
-                userPage_Email.setText(user.getEmail());
-                userPage_SelectQuestion.setValue(user.getQuestion());
-                userPage_Answer.setText(user.getAnswer());
+                userPageName.setText(user.getName());
+                userPageEmail.setText(user.getEmail());
+                userPageSelectQuestion.setValue(user.getQuestion());
+                userPageAnswer.setText(user.getAnswer());
             }
         } catch (SQLException e) {
         	// Imprimindo o stack trace em caso de exceção
@@ -93,11 +94,11 @@ public class UserPageController implements Initializable {
         
         try {
         	//Colocando cada caixa de texto em uma string!
-            String name = userPage_Name.getText().trim();
-            String email = userPage_Email.getText().trim();
-            String password = userPage_Password.getText().trim(); 
-            String question = userPage_SelectQuestion.getValue() != null ? userPage_SelectQuestion.getValue().trim() : "";
-            String answer = userPage_Answer.getText().trim();
+            String name = userPageName.getText().trim();
+            String email = userPageEmail.getText().trim();
+            String password = userPagePassword.getText().trim(); 
+            String question = userPageSelectQuestion.getValue() != null ? userPageSelectQuestion.getValue().trim() : "";
+            String answer = userPageAnswer.getText().trim();
             
 
             //Criptografando senha
@@ -140,7 +141,7 @@ public class UserPageController implements Initializable {
    // Método initialize para inicializar a lista de perguntas
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        userPage_SelectQuestion.setItems(questionBoxList);
+        userPageSelectQuestion.setItems(questionBoxList);
     }
 
 }
