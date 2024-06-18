@@ -1,5 +1,6 @@
 package controller;
 
+
 import java.io.IOException;
 import java.sql.SQLException;
 import org.mindrot.jbcrypt.BCrypt;
@@ -15,6 +16,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import model.User;
 import util.AlertMessage;
@@ -43,8 +45,12 @@ public class LoginScreenController {
         this.main = main;
     }
 
-    // Método para realizar o login
-    public void login(ActionEvent event) throws IOException {
+    public MyContacts getMain() {
+		return main;
+	}
+
+	// Método para realizar o login
+    public void login(ActionEvent event) {
         try {
             String email = loginEmail.getText().trim();
             String password = loginPassword.getText().trim();
@@ -53,10 +59,8 @@ public class LoginScreenController {
                 authenticateUser(event, email, password);
             }
             clearFields();
-        } catch (IOException e) {
-            e.printStackTrace();
         } catch (Exception e) {
-            e.printStackTrace();
+            handleException(new AlertMessage(), e, "Erro ao tentar realizar o login!");
         }
     }
 
@@ -90,26 +94,38 @@ public class LoginScreenController {
 
     // Método para carregar a tela de contatos
     private void loadContactHomePage(ActionEvent event, int userID) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/ContactPage.fxml"));
-        Parent view = loader.load();
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/ContactPage.fxml"));
+            Parent view = loader.load();
 
-        ContactPageController contactPageController = loader.getController();
-        contactPageController.setUserId(userID);
+            ContactPageController contactPageController = loader.getController();
+            contactPageController.setUserId(userID);
 
-        Scene scene = new Scene(view);
-        Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        window.setScene(scene);
-        window.show();
+            Scene scene = new Scene(view);
+            Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            window.setScene(scene);
+            window.show();
+        } catch (IOException e) {
+            handleException(new AlertMessage(), e, "Erro ao carregar a página de contatos!");
+        }
     }
 
     // Método para carregar a tela de cadastro
-    public void signUpScreen(ActionEvent event) throws IOException {
-        loadScreen(event, "/view/SignUpScreen.fxml");
+    public void signUpScreen(ActionEvent event) {
+        try {
+            loadScreen(event, "/view/SignUpScreen.fxml");
+        } catch (IOException e) {
+            handleException(new AlertMessage(), e, "Erro ao carregar a tela de cadastro!");
+        }
     }
 
     // Método para carregar a tela de "Esqueceu a senha"
-    public void forgotPassword(ActionEvent event) throws IOException {
-        loadScreen(event, "/view/ForgotPassword.fxml");
+    public void forgotPassword(ActionEvent event) {
+        try {
+            loadScreen(event, "/view/ForgotPassword.fxml");
+        } catch (IOException e) {
+            handleException(new AlertMessage(), e, "Erro ao carregar a tela de recuperação de senha!");
+        }
     }
 
     private void loadScreen(ActionEvent event, String fxmlPath) throws IOException {
@@ -118,5 +134,18 @@ public class LoginScreenController {
         Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
         window.setScene(scene);
         window.show();
+    }
+    
+    @FXML
+    private void close(MouseEvent event) {
+        // Obtém a janela atual (Stage) e a fecha
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        stage.close();
+    }
+
+    // Método para tratar exceções
+    private void handleException(AlertMessage alert, Exception e, String message) {
+        e.printStackTrace();
+        alert.errorMessage(message + e.getMessage());
     }
 }

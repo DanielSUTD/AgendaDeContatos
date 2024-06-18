@@ -23,7 +23,7 @@
       </TableView>
       <AnchorPane layoutX="-9.0" prefHeight="540.0" prefWidth="125.0" style="-fx-background-color: white;">
          <children>
-            <ImageView fitHeight="69.0" fitWidth="74.0" layoutX="26.0" layoutY="457.0" onMouseClicked="#clickedUser" styleClass="close">
+            <ImageView fitHeight="69.0" fitWidth="74.0" layoutX="26.0" layoutY="457.0" onMouseClicked="#clickedUser" styleClass="icon">
                <image>
                   <Image url="@../../img/user.png" />
                </image>
@@ -76,7 +76,7 @@
             <Font name="Constantia Bold" size="15.0" />
          </font>
       </Button>
-      <ImageView fitHeight="15.0" fitWidth="22.0" layoutX="938.0" onMouseClicked="#close" styleClass="close">
+      <ImageView fitHeight="15.0" fitWidth="22.0" layoutX="938.0" onMouseClicked="#close" styleClass="icon">
          <image>
             <Image url="@../../img/close.png" />
          </image>
