@@ -7,7 +7,7 @@ import java.sql.SQLException;
 public class ConnectDB {
 
    
-    private static final String URL = "jdbc:mysql://localhost:3306/mydb?useSSL=false&autoReconnect=true&useUnicode=yes&characterEncoding=UTF-8";
+    private static final String URL = "jdbc:mysql://localhost:3306/AGENDA?useSSL=false&autoReconnect=true&useUnicode=yes&characterEncoding=UTF-8";
     private static final String USER = "root";
     private static final String PASSWORD = "soutodrex123";
 

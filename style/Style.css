@@ -39,7 +39,7 @@
 .table-view .column-header, .table-view .filler{
         -fx-size:50px;
         -fx-border-width: 0 0 10 0;
-        -fx-background-color:transparent;
+        -fx-background-color: transparent;
         
 }
     
