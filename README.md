@@ -23,8 +23,6 @@ Como instalar o projeto?
 
 ```bash
 git clone https://github.com/DanielSUTD/AgendaDeContatos.git
-cd AgendaDeContatos
-npm install
 ````
 
 ## Uso
